@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Chonker Example</title>
+</head>
+
+<body>
+  <div>
+    <div>
+      <input type="file" name="chonker" id="chonker">
+      <button class="button" id="chonker_btn">Upload Large Image</button>
+    </div>
+    <div id="large_image_display"></div>
+  </div>
+
+
+  <div style="margin-top: 10px; padding: 20px; border: 1px solid black; width: fit-content;">
+    <button class="button" id="get_events_btn">Get Events</button>
+  </div>
+  <script type="module">
+    import { createProfile, createRecordsWriteMessage, sendRequest } from './dist/browser.mjs';
+
+    const profile = await createProfile();
+    const { recordsWrite, dataStream, dataBytes } = await createRecordsWriteMessage(profile);
+
+    await sendRequest('http://localhost:3000', {
+      target: profile.did,
+      message: recordsWrite,
+      data: dataBytes,
+    });
+
+    async function* iterableReader(reader) {
+      let chunk;
+      do {
+        chunk = await reader.read()
+        yield chunk.value ?? new Uint8Array();
+      } while (!chunk.done);
+    }
+
+    chonker_btn.addEventListener('click', async event => {
+      const file = chonker.files[0];
+      const streamReader = file.stream().getReader();
+      const iterableStreamReader = iterableReader(streamReader);
+    });
+  </script>
+</body>
+
+</html>

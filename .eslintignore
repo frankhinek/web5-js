@@ -1,3 +1,4 @@
 test-site
 dist
 test.mjs
+fetch-test.mjs

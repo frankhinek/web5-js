@@ -1,0 +1,21 @@
+{
+    "type": "module",
+    "dependencies": {
+        "readable-stream": "4.4.0",
+        "readable-web-to-node-stream": "^3.0.2",
+        "node-fetch": "3.3.1",
+        "cross-fetch": "3.1.5"
+    },
+    "devDependencies": {
+        "esbuild": "0.16.7",
+        "eslint": "8.40.0",
+        "rimraf": "5.0.0",
+        "typescript": "5.0.4"
+    },
+    "browser": {
+        "node-fetch": "./fetch-browser.js"
+    },
+    "scripts": {
+        "build": "rimraf dist && node build.js"
+    }
+}
