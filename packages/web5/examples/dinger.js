@@ -157,7 +157,6 @@ async function renderDings() {
     console.error('Failed to query dings', status);
   }
 
-  console.log(records);
   for (let record of records) {
     const recordExists = document.getElementById(record.id);
     if (recordExists) {
