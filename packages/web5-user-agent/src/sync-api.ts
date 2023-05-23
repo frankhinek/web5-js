@@ -185,8 +185,6 @@ export class SyncApi implements SyncManager {
   }
 
   async enqueuePull() {
-    await this.enqueuePull();
-
     const profileDids = await this.#db.sublevel('registeredProfiles').keys().all();
     const syncStates: SyncState[] = [];
 
@@ -243,8 +241,11 @@ export class SyncApi implements SyncManager {
   }
 
   async pull() {
+    await this.enqueuePull();
+
     const pullQueue = this.#getPullQueue();
     const pullJobs = await pullQueue.iterator().all();
+
     const delOps: DbBatchOperation[] = [];
     const errored: Set<string> = new Set();
 
@@ -318,7 +319,7 @@ export class SyncApi implements SyncManager {
 
         const pullReply = await this.#dwn.processMessage(did, entry.message, dataStream);
 
-        if (pullReply.status.code === 202) {
+        if (pullReply.status.code === 202 || pullReply.status.code === 409) {
           await this.setWatermark(did, dwnUrl, 'pull', watermark);
           await this.#addMessage(did, messageCid);
           delOps.push({ type: 'del', key });

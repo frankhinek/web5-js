@@ -143,9 +143,9 @@ async function configureProtocol() {
 }
 
 async function renderDings() {
+  // pull messages from local dwn. sync should automatically take care of pulling new messages from remote DWNs
   const { records, status } = await web5.dwn.records.query({
-    from    : myDid,
-    message : {
+    message: {
       filter: {
         protocol: dingerProtocolDefinition.protocol
       }
